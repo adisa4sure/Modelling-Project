@@ -1,8 +1,13 @@
-cmake_minimum_required (VERSION 2.8.11)
+cmake_minimum_required (VERSION 3.0)
 
-add_executable(exe main.cpp)
-target_link_libraries(exe
-    PUBLIC
-    libFingerPrint
+find_package(OpenCV REQUIRED)
+
+add_executable(basic_opencv basic_opencv.cxx)
+target_link_libraries(basic_opencv
+        PUBLIC
+        ${OpenCV_LIBS}
 )
-target_include_directories(exe PUBLIC src)
+target_include_directories(basic_opencv 
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS} 
+)
