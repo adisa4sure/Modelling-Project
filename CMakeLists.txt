@@ -15,4 +15,18 @@ find_package(OpenCV REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(docs)
-add_subdirectory(demo)
+add_subdirectory(include)
+
+add_executable(main ./demo/main.cpp)
+
+set(LIBS
+    PUBLIC
+    ${OpenCV_LIBS}
+  libFingerPrintsrc)
+
+target_link_libraries(main ${LIBS})
+
+target_include_directories(main
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)

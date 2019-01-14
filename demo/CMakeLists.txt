@@ -6,7 +6,7 @@ target_link_libraries(basic_opencv
         PUBLIC
         ${OpenCV_LIBS}
 )
-target_include_directories(basic_opencv 
+target_include_directories(basic_opencv
         PUBLIC
-        ${OpenCV_INCLUDE_DIRS} 
+        ${OpenCV_INCLUDE_DIRS}
 )
