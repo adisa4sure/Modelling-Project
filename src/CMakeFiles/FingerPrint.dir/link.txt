@@ -1,2 +1,0 @@
-/usr/bin/ar qc libFingerPrint.a  CMakeFiles/FingerPrint.dir/utils.cpp.o
-/usr/bin/ranlib libFingerPrint.a

@@ -22,7 +22,7 @@ add_executable(main ./demo/main.cpp)
 set(LIBS
     PUBLIC
     ${OpenCV_LIBS}
-  libFingerPrintsrc)
+    libFingerPrintsrc)
 
 target_link_libraries(main ${LIBS})
 
