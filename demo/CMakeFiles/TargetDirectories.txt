@@ -1,3 +1,0 @@
-/home/simonadi/Documents/ensimag/msiam/project/Modelling-Project/demo/CMakeFiles/rebuild_cache.dir
-/home/simonadi/Documents/ensimag/msiam/project/Modelling-Project/demo/CMakeFiles/basic_opencv.dir
-/home/simonadi/Documents/ensimag/msiam/project/Modelling-Project/demo/CMakeFiles/edit_cache.dir

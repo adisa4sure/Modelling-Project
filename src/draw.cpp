@@ -9,11 +9,11 @@ Image::Image(string filename)
   img = imread(link, 0);
 }
 
-Image::draw_rectangle(Point top_left, int height, int width, int intensity)
+void Image::draw_rectangle(Point top_left, int height, int width, int intensity)
 {
-  for(x = top_left.x; x<x+width; x ++)
+  for(int x = top_left.x; x<x+width; x ++)
   {
-    for(y = top_left.y; y< y+height; y++)
+    for(int y = top_left.y; y< y+height; y++)
     {
       img.at<uchar>(Point(x,y)) = intensity;
     }
@@ -22,7 +22,7 @@ Image::draw_rectangle(Point top_left, int height, int width, int intensity)
 
 //https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
 
-Image::draw_line_low(Point start, Point end)
+vector<Point> Image::draw_line_low(Point start, Point end)
 {
   vector<Point> line_pixels;
   int dx = end.x - start.x;
@@ -45,7 +45,7 @@ Image::draw_line_low(Point start, Point end)
   return(line_pixels);
 }
 
-Image::draw_line_high(Point start, Point end)
+vector<Point> Image::draw_line_high(Point start, Point end)
 {
   vector<Point> line_pixels;
   int dx = end.x - start.x;
@@ -68,19 +68,19 @@ Image::draw_line_high(Point start, Point end)
   return(line_pixels);
 }
 
-Image::draw_1line(Point start, Point end, int intensity)
+vector<Point> Image::draw_1line(Point start, Point end)
 {
   if (abs(end.y - start.y) < abs(end.x - start.x)){
     if (start.x > end.x){
-      return(Image.draw_line_low(end, start, intensity));
+      return(this->draw_line_low(end, start));
     } else {
-      return(Image.draw_line_low(start, end, intensity));
+      return(this->draw_line_low(start, end));
     }
   } else {
     if (start.y > end.y){
-      return(Image.draw_line_high(end, start, intensity));
+      return(this->draw_line_high(end, start));
     } else {
-      return(Image.draw_line_high(start, end, intensity));
+      return(this->draw_line_high(start, end));
     }
   }
 }

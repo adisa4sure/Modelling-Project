@@ -1,2 +1,0 @@
-/usr/bin/ar qc ../lib/liblibFingerPrinth.a  
-/usr/bin/ranlib ../lib/liblibFingerPrinth.a
