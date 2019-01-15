@@ -1,3 +1,6 @@
+#ifndef DRAW_H
+#define DRAW_H
+
 #include <opencv2/opencv.hpp>
 #include <sstream>
 #include <string>
@@ -23,3 +26,5 @@ public:
   void draw_circle(Point center, int radius);
   //void symmetry(string filename, bool axis);
 };
+
+#endif
