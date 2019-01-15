@@ -1,4 +1,46 @@
-#include "./../include/draw.hpp"
+#include <opencv2/opencv.hpp>
+#include "transformations.hpp"
+#include "utils.hpp"
+#include "interpolation/interpolation.hpp"
+
+namespace libfp {
+namespace transformations {
+        void _remap(Image& img, mapfun fn, interpolation::Interpolator* inter)
+        {
+                Mat buf = img.getmat();
+
+                Mat out = cv::Mat::zeros(img.getsize(), buf.type());
+
+                for(unsigned int x = 0; x < img.getsize().width; x++)
+                {
+                        for(unsigned int y = 0; y < img.getsize().height; y++)
+                        {
+                                cv::Mat orig = fn((Mat_<double>(2,1) << (double)x, (double)y));
+                                double xc, yc;
+                                xc = orig.at<double>(0,0);
+                                yc = orig.at<double>(1,0);
+                                out.at<uchar>(y, x) = inter->get_pixel_value(img, yc, xc);
+                        }
+                }
+                img.setmat(out);
+        }
+        
+        void remap(Image& img, mapfun fn, interpolation::interpolationType type)
+        {
+                interpolation::Interpolator* inter;
+                switch(type)
+                {
+                        case interpolation::interpolationType::INTERPOLATION_BILINEAR:
+                                inter = new interpolation::LinearInterpolator();
+                                break;
+                }
+                
+                _remap(img, fn, inter);
+                delete inter;
+        }
+
+}
+}
 
 void symmetryy(Image image, string filename)
 { //axis = 0 --> y axis, axis = 1 --> x axis

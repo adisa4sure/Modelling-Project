@@ -3,6 +3,7 @@ set(SOURCES
         draw.cpp
         transformations.cpp
         utils.cpp
+        interpolation/lininterpolator.cxx
 )
 
 set(LIBS
@@ -18,4 +19,5 @@ target_link_libraries(libFingerPrint ${LIS})
 target_include_directories(libFingerPrint
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
+        ../include
 )

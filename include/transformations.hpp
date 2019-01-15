@@ -1,10 +1,18 @@
 #ifndef TRANSFORMATIONS_H
 #define TRANSFORMATIONS_H
 
-#include "draw.hpp"
+#include "interpolation/interpolator.hpp"
 
 using namespace cv;
 using namespace std;
+
+namespace libfp {
+namespace transformations {
+        typedef cv::Mat (*mapfun)(cv::Mat);
+
+        void remap(Image& img, mapfun fn, interpolation::interpolationType type);
+}
+}
 
 void symmetry(Image image, string filename);
 void symmetryx(Image image, string filename);

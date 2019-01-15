@@ -2,10 +2,7 @@
 
 Image::Image(string filename)
 {
-  stringstream ss;
-  ss << "./images/" << filename;
-  string link = ss.str();
-  mat = imread(link, CV_8U);
+  mat = imread(filename, 0);
   width = mat.size().width;
   height = mat.size().height;
 }
