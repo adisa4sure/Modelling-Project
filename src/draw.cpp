@@ -12,7 +12,7 @@ Image::Image(string filename)
 void Image::draw_rectangle(Point top_left, int height, int width, int intensity)
 {
   for(int x = top_left.x; x<x+width; x ++)
-  {
+  { 
     for(int y = top_left.y; y< y+height; y++)
     {
       img.at<uchar>(Point(x,y)) = intensity;

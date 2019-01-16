@@ -6,15 +6,14 @@ set(SOURCES
 set(LIBS
     PUBLIC
     ${OpenCV_LIBS}
-    libFingerPrinth
 )
 
 # Add all the sources to the project
-add_library(libFingerPrintsrc ${SOURCES})
+add_library(libFingerPrint ${SOURCES})
 
-target_link_libraries(libFingerPrintsrc ${LIS})
+target_link_libraries(libFingerPrint ${LIS})
 
-target_include_directories(libFingerPrintsrc
+target_include_directories(libFingerPrint
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )
