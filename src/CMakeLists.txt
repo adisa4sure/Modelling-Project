@@ -1,6 +1,8 @@
 # Create variable containing all the CXX sources
 set(SOURCES
         draw.cpp
+        transformations.cpp
+        utils.cpp
 )
 
 set(LIBS
