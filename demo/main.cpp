@@ -3,8 +3,11 @@
 int main()
 {
   Image image("clean_finger");
-  draw_rectangle(image, Point(0,0), 100, 100, 0);
-  symmetryx(image, "testx");
-  image.show();
+  Image image2("clean_finger");
+  //draw_rectangle(image, Point(0,0), 100, 100, 0);
+  //symmetryx(image, "testx");
+  weaken_pressure(image, Point(127, 143), 250, 280, 0.05);
+  image.show("weakened");
+  image2.show("original");
   return(0);
 }

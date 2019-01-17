@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <math.h>
 
 #include "draw.hpp"
 
@@ -20,12 +21,14 @@ private:
   int width;
 public:
   Image(string filename);
-  void show();
+  void show(string windowname);
   Mat getmat();
   void setmat(Mat newmat);
   Size getsize();
 };
 
 void savemat(Mat mat, string filename);
+
+double distance(Point point1, Point point2);
 
 #endif
