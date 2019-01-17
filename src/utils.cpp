@@ -10,10 +10,10 @@ Image::Image(string filename)
   height = mat.size().height;
 }
 
-void Image::show()
+void Image::show(string windowname)
 {
-  namedWindow("Display", WINDOW_AUTOSIZE);
-  imshow("Display", mat);
+  namedWindow(windowname, WINDOW_AUTOSIZE);
+  imshow(windowname, mat);
   waitKey(0);
 }
 
@@ -39,4 +39,10 @@ void savemat(Mat mat, string filename)
   string link = ss.str();
   imwrite(link, mat);
   cout << "Image saved in the Modelling-project/images/   folder" << endl;
+}
+
+double distance(Point point1, Point point2)
+{
+  double dist = sqrt(pow(double(point1.x - point2.x),2) + pow(double(point1.y - point2.y), 2));
+  return dist;
 }
