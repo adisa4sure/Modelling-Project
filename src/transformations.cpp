@@ -29,6 +29,7 @@ void symmetryx(Image image, string filename)
 double lowerfunc(Point point1, Point point2, double K)
 {
   double result = 1/(1+exp(K*(distance(point1, point2)- 120)));
+  // double result = 1/(1+exp(K+K*abs(cos(theta(point1, point2)))*(distance(point1, point2))));
   return result;
 }
 
@@ -42,6 +43,7 @@ void weaken_pressure(Image image, Point center, int width, int height, double K)
     //for (int y = center.y - height/2; y < center.y + height/2 + 1; y++)
     for (int y = 0; y < image.getsize().height; y++)
     {
+      //immat.at<uchar>(Point(x,y)) = immat.at<uchar>(Point(x,y))*lowerfunc(center, Point(x,y), K);
       immat.at<uchar>(Point(x,y)) = 255 - double(255 - immat.at<uchar>(Point(x,y)))*lowerfunc(center, Point(x,y), K);
     }
   }

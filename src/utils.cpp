@@ -17,7 +17,7 @@ void Image::show(string windowname)
   waitKey(0);
 }
 
-Mat Image::getmat()
+Mat Image::getmat()  
 {
   return mat;
 }
@@ -45,4 +45,9 @@ double distance(Point point1, Point point2)
 {
   double dist = sqrt(pow(double(point1.x - point2.x),2) + pow(double(point1.y - point2.y), 2));
   return dist;
+}
+
+double theta(Point point1, Point point2)
+{
+
 }

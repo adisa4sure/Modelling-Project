@@ -31,4 +31,6 @@ void savemat(Mat mat, string filename);
 
 double distance(Point point1, Point point2);
 
+double theta(Point point1, Point point2);
+
 #endif
