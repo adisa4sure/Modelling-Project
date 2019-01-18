@@ -20,6 +20,7 @@ namespace transformations {
                                 xc = orig.at<double>(0,0);
                                 yc = orig.at<double>(1,0);
                                 out.at<uchar>(y, x) = inter->get_pixel_value(img, xc, yc);
+                                out.at<uchar>(y, x) = inter->get_pixel_value(img, yc, xc);
                         }
                 }
                 img.setmat(out);

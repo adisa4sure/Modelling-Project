@@ -8,7 +8,6 @@ using namespace std;
 
 namespace libfp {
 namespace transformations {
-        //typedef cv::Mat (*mapfun)(cv::Mat);
         typedef std::function<Mat(Mat)> mapfun;
 
         void remap(Image& img, mapfun fn, interpolation::interpolationType type);
@@ -24,6 +23,9 @@ namespace transformations {
         void rotate(Image&, double, double, double, interpolation::interpolationType); 
 
         Mat generateAmatFromPoints(vector<Mat>, vector<Mat>);
+        typedef cv::Mat (*mapfun)(cv::Mat);
+
+        void remap(Image& img, mapfun fn, interpolation::interpolationType type);
 }
 }
 

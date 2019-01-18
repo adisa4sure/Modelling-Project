@@ -1,16 +1,22 @@
 #include <opencv2/opencv.hpp>
 #include "utils.hpp"
 #include "transformations.hpp"
+<<<<<<< HEAD
 #include "draw.hpp"
 #include "interpolation/interpolation.hpp"
 #include <cmath>
 #include <iostream>
 #include <vector>
 #include <iterator>
+=======
+#include "interpolation/interpolation.hpp"
+#include <cmath>
+>>>>>>> f76d428... Remap
 
 using namespace cv;
 using namespace std;
 
+<<<<<<< HEAD
 typedef std::function<void(int, int, int)> mouseCallback;
 
 int main(int argc, char** argv)
@@ -94,5 +100,24 @@ int main(int argc, char** argv)
         imageSrc.show();
         imageDst.show();
         libfp::utils::waitKey(0);
+=======
+Mat rotMap(Mat p){
+        Mat M = (Mat_<double>(2,2) << cos(0.2), -sin(0.2), sin(0.2), cos(0.2));
+        Mat d = M*p;
+        return d;
+}
+
+int main(int argc, char** argv)
+{
+        if(argc != 2)
+        {
+                cout << "Usage: " << argv[0] << " [Image to load]" << endl;
+                return -1;
+        }
+
+        Image image = Image(argv[1]);
+        libfp::transformations::remap(image, rotMap, libfp::interpolation::INTERPOLATION_BILINEAR);
+        image.show();
+>>>>>>> f76d428... Remap
         return 0;
 }
