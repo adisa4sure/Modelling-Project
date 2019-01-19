@@ -1,16 +1,29 @@
 #ifndef TRANSFORMATIONS_H
 #define TRANSFORMATIONS_H
 
-#include "interpolation/interpolator.hpp"
+#include "interpolation/interpolation.hpp"
 
 using namespace cv;
 using namespace std;
 
 namespace libfp {
 namespace transformations {
-        typedef cv::Mat (*mapfun)(cv::Mat);
+        //typedef cv::Mat (*mapfun)(cv::Mat);
+        typedef std::function<Mat(Mat)> mapfun;
 
         void remap(Image& img, mapfun fn, interpolation::interpolationType type);
+
+        mapfun lmat2map(Mat mat);
+
+        mapfun amat2map(Mat mat);
+
+        Mat getRotationMatrix(double, double, double);
+
+        Mat invertAffineMat(Mat_<double>);
+
+        void rotate(Image&, double, double, double, interpolation::interpolationType); 
+
+        Mat generateAmatFromPoints(vector<Mat>, vector<Mat>);
 }
 }
 

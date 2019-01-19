@@ -1,17 +1,39 @@
 #include "./../include/utils.hpp"
+#include <cstdlib>
+#include <ctime>
+
+
+namespace libfp{
+namespace utils{
+        void waitKey(int ms){
+                cv::waitKey(ms);
+        }
+}
+}
+
+static bool randseed = false;
 
 Image::Image(string filename)
 {
   mat = imread(filename, 0);
+
+  if(!randseed)
+          srand(time(NULL));
+
+  window_name = filename + to_string(rand() % 1000);
   width = mat.size().width;
   height = mat.size().height;
+
+  namedWindow(window_name, WINDOW_AUTOSIZE);
 }
 
 void Image::show(string windowname)
 {
-  namedWindow(windowname, WINDOW_AUTOSIZE);
-  imshow(windowname, mat);
-  waitKey(0);
+  imshow(window_name, mat);
+}
+
+void Image::registerCallback(MouseCallback callback, void* userdata){
+        setMouseCallback(window_name, callback, userdata);
 }
 
 Mat Image::getmat()

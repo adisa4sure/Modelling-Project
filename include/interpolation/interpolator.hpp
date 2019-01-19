@@ -6,7 +6,6 @@
 
 namespace libfp{
 namespace interpolation{
-enum interpolationType { INTERPOLATION_BILINEAR };
 
 class Interpolator
 {
