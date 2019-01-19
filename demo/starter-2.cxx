@@ -116,7 +116,8 @@ int main(int argc, char** argv)
         }
 
         Image image = Image(argv[1]);
-        libfp::transformations::remap(image, rotMap, libfp::interpolation::INTERPOLATION_BILINEAR);
+        image.show();
+        libfp::transformations::remap(image, rotMap, libfp::interpolation::INTERPOLATION_LANCZOS4);
         image.show();
 >>>>>>> f76d428... Remap
         return 0;
