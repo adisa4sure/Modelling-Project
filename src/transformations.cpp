@@ -28,8 +28,8 @@ void symmetryx(Image image, string filename)
 
 double lowerfunc(Point point1, Point point2, double K)
 {
-  double result = 1/(1+exp(K*(distance(point1, point2)- 120)));
-  // double result = 1/(1+exp(K+K*abs(cos(theta(point1, point2)))*(distance(point1, point2))));
+  //double result = 1/(1+exp(K*(distance(point1, point2)- 120)));
+  double result = 1/(1+exp((K+K*abs(costheta(point1, point2)))*(distance(point1, point2) - 120 + abs(costheta(point1, point2)) * 50)));
   return result;
 }
 
