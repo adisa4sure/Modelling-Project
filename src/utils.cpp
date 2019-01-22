@@ -27,9 +27,13 @@ Image::Image(string filename)
   namedWindow(window_name, WINDOW_AUTOSIZE);
 }
 
-void Image::show(string windowname)
+void Image::show(string force_window_name)
 {
-  imshow(window_name, mat);
+  if(!force_window_name.length()){
+        imshow(window_name, mat);
+  }else{
+          imshow(force_window_name, mat);
+  }
 }
 
 void Image::registerCallback(MouseCallback callback, void* userdata){

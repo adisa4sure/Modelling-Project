@@ -29,7 +29,7 @@ private:
   string window_name;
 public:
   Image(string filename);
-  void show(string windowname);
+  void show(string force_window_name = "");
   Mat getmat();
   void setmat(Mat newmat);
   Size getsize();

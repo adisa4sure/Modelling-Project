@@ -34,15 +34,6 @@ unsigned char LinearInterpolator::get_pixel_value(Image img, double x, double y)
         cv::Mat Y = (cv::Mat_<double>(2,1) << (double)(y2 - y), (double)(y - y1));
         double interpolatedIntensity = (1/((x2-x1)*(y2-y1))) * ((cv::Mat)(X * M * Y)).at<double>(0);
 
-        cv::Mat M = (cv::Mat_<double>(2,2) << (double)buf.at<uchar>(x1, y1),
-                                              (double)buf.at<uchar>(x1, y2),
-                                              (double)buf.at<uchar>(x2, y1),
-                                              (double)buf.at<uchar>(x2, y2));
-
-        cv::Mat X = (cv::Mat_<double>(1,2) << (double)(x2 - x), (double)(x - x1));
-        cv::Mat Y = (cv::Mat_<double>(2,1) << (double)(y2 - y), (double)(y - y1));
-        double interpolatedIntensity = (1/((x2-x1)*(y2-y1))) * ((cv::Mat)(X * M * Y)).at<double>(0);
-
         return (unsigned char)std::round(interpolatedIntensity);
 }
 }
