@@ -10,7 +10,7 @@ namespace interpolation{
 class Interpolator
 {
 public:
-        virtual unsigned char get_pixel_value(Image, double, double) = 0;
+    virtual unsigned char get_pixel_value(Image, double, double) = 0;
 };
 }
 }

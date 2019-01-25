@@ -18,6 +18,8 @@ namespace transformations {
 
         Mat getRotationMatrix(double, double, double);
 
+        Mat generateTranslationMatrix(double, double);
+
         Mat invertAffineMat(Mat_<double>);
 
         void rotate(Image&, double, double, double, interpolation::interpolationType); 
@@ -25,6 +27,8 @@ namespace transformations {
         Mat generateAmatFromPoints(vector<Mat>, vector<Mat>);
 
         void remap(Image& img, mapfun fn, interpolation::interpolationType type);
+        
+        mapfun generateWarpSkinMapping(double, double, double, double);
 }
 }
 

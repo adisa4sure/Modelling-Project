@@ -82,6 +82,22 @@ namespace transformations {
                 return ((Mat)(fTrans*rot*bTrans))(Range(0,2), Range::all());
         }
 
+        mapfun generateWarpSkinMapping(double thetamax, double xc, double yc, double k){
+                return [=](Mat d) -> Mat {
+                        double x = d.at<double>(0,0);
+                        double y = d.at<double>(0,1);
+                        double dx = x-xc;
+                        double dy = y-yc;
+                        std::function<double(double)> regulator = [](double x) -> double { return -2*std::pow(x,3) + 3*std::pow(x,2); };
+                        double r = std::sqrt(std::pow(dx, 2) + std::pow(dy, 2));
+                        double beta = std::atan2(dy, dx) + thetamax*regulator((k-r)/k);
+                        std::function<double(double)> regulatord = [](double x) -> double { return -1*std::pow(x,3) + 2*std::pow(x,2); };
+                        double rr = regulatord(r/k)*k;//rectified r
+                        Mat out = (Mat_<double>(2,1) << ((r <= k) ? xc + rr*std::cos(beta) : x), ((r <= k) ? yc + rr*std::sin(beta) : y));
+                        return out;
+                };
+        }
+
         Mat invertAffineMat(Mat_<double> m){
                 return (1/(m(0,0)*m(1,1) - m(0,1)*m(1,0)))*
                         (Mat)(Mat_<double>(2,3) <<  
@@ -92,11 +108,8 @@ namespace transformations {
         void rotate(Image& img,
                     double theta, double xc, double yc,
                     interpolation::interpolationType type){
-                std::cout << xc << " " << yc << std::endl;
                 Mat rot = generateRotationMatrix(theta, xc, yc);
-                std::cout << rot << endl;
                 rot = invertAffineMat(rot);
-                std::cout << rot << endl;
                 remap(img, amat2map(rot), type);
         }
 

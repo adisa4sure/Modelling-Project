@@ -6,42 +6,40 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 
 #include "draw.hpp"
 
-using namespace cv;
-using namespace std;
-
 namespace libfp{
-namespace utils{
-        void waitKey(int);
-}
+    namespace utils{
+        int waitKey(int);
+    }
 }
 
 class Image
 {
-private:
-  Mat mat;
-  int height;
-  int width;
-  string window_name;
-public:
-  Image(string filename);
-  void show(string force_window_name = "");
-  Mat getmat();
-  void setmat(Mat newmat);
-  Size getsize();
-  void convolve(Mat filter, bool half);
-  void registerCallback(MouseCallback callback, void* userdata = 0);
+    private:
+        cv::Mat mat;
+        int height;
+        int width;
+        std::string window_name;
+    public:
+        Image(std::string filename);
+        Image clone();
+        void show(std::string force_window_name = "");
+        cv::Mat getmat() const;
+        void setmat(cv::Mat newmat);
+        cv::Size getsize() const;
+        void convolve(cv::Mat filter, bool half);
+        void registerCallback(cv::MouseCallback callback, void* userdata = 0);
 };
 
-void savemat(Mat mat, string filename);
+void savemat(cv::Mat mat, std::string filename);
 
-double distance(Point point1, Point point2);
+double distance(cv::Point point1, cv::Point point2);
 
-double costheta(Point point1, Point point2);
+double costheta(cv::Point point1, cv::Point point2);
 
 bool parity(unsigned  int x);
 

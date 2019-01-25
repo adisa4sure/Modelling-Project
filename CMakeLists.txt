@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 2.8.11)
-project(FingerPrint)
-
-set(CMAKE_BUILD_TYPE Release)
+cmake_minimum_required(VERSION 3.5)
+project(FingerPrint CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -17,17 +15,21 @@ find_package(OpenCV REQUIRED)
 
 get_filename_component(LibFP_INCLUDE_DIRECTORY include DIRECTORY)
 
+include_directories(include)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
 add_subdirectory(src)
 add_subdirectory(docs)
-include_directories(include)
-
-add_executable(main ./demo/main.cpp)
-add_executable(starter-2 ./demo/starter-2.cxx)
 
 set(LIBS
     PUBLIC
     ${OpenCV_LIBS}
-    libFingerPrint)
+    FingerPrint)
+
+add_subdirectory(demo)
+
+add_executable(main ./demo/main.cpp)
+add_executable(main-2 ./demo/main-2.cxx)
 
 target_link_libraries(main ${LIBS})
 
@@ -35,9 +37,9 @@ target_include_directories(main
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )
-target_link_libraries(starter-2 ${LIBS})
+target_link_libraries(main-2 ${LIBS})
 
-target_include_directories(starter-2
+target_include_directories(main-2
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )
