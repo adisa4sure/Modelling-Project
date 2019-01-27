@@ -94,48 +94,58 @@ static bool randseed = false;
 
 Image::Image(string filename)
 {
-  stringstream ss;
-  ss << "./images/" << filename;
-  string link = ss.str();
-  mat = imread(link, CV_8U);
-  width = mat.size().width;
-  height = mat.size().height;
+    mat = imread(filename, 0);
+
+    if(!randseed){
+        srand(time(NULL));
+        randseed = true;
+    }
+
+    window_name = filename + to_string(rand() % 1000);
+    width = mat.size().width;
+    height = mat.size().height;
+
+    namedWindow(window_name, WINDOW_AUTOSIZE);
 }
 
-Image::Image(Mat cmat)
+Image Image::clone()
 {
-  mat = cmat;
-  width = mat.size().width;
-  height = mat.size().height;
-  if(!randseed)
-          srand(time(NULL));
-  window_name = "image" + to_string(rand() % 1000);
+    Image ret = Image(*this);
+    ret.mat = mat.clone();
+    ret.window_name = window_name + "_copy" + to_string(rand() % 1000);
+
+    namedWindow(ret.window_name, WINDOW_AUTOSIZE);
+
+    return ret;
 }
 
-void Image::show(string window_name)
+
+void Image::show(string force_window_name)
 {
-  this->window_name = window_name;
-  namedWindow(window_name, WINDOW_AUTOSIZE);
-  imshow(window_name, mat);
+    if(!force_window_name.length()){
+        imshow(window_name, mat);
+    }else{
+        imshow(force_window_name, mat);
+    }
 }
 
 void Image::registerCallback(MouseCallback callback, void* userdata){
-        setMouseCallback(window_name, callback, userdata);
+    setMouseCallback(window_name, callback, userdata);
 }
 
-Mat Image::getmat()
+Mat Image::getmat() const
 {
-  return mat;
+    return mat;
 }
 
 void Image::setmat(Mat newmat)
 {
-  mat = newmat;
+    mat = newmat;
 }
 
-Size Image::getsize()
+Size Image::getsize() const
 {
-  return mat.size();
+    return mat.size();
 }
 
 void Image::convolve(Mat filter, bool half)

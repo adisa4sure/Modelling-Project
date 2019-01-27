@@ -14,14 +14,6 @@
 using namespace cv;
 using namespace std;
 
-<<<<<<< Updated upstream
-class Image
-{
-private:
-  Mat mat;
-  int height;
-  int width;
-=======
 namespace libfp{
 namespace utils{
         void waitKey(int);
@@ -92,7 +84,6 @@ private:
   int height; /*!< Height of the image in pixels*/
   int width; /*!< Width of the image in pixels*/
   string window_name; /*!< Text displayed as the window name when the image is shown*/
->>>>>>> Stashed changes
 public:
   /*!
      *  \brief Constructeur
@@ -102,9 +93,6 @@ public:
      *  \param filename : string containing the path to the image to open
      */
   Image(string filename);
-<<<<<<< Updated upstream
-  void show(string windowname);
-=======
   /*!
      *  \brief Constructeur
      *
@@ -126,7 +114,6 @@ public:
      *
      *  Returns the Mat of the image
      */
->>>>>>> Stashed changes
   Mat getmat();
   /*!
      *  \brief Setter
@@ -144,9 +131,6 @@ public:
      *  \param listSongs : liste initial des morceaux
      */
   Size getsize();
-<<<<<<< Updated upstream
-  void convolve(Mat filter, bool half);
-=======
   /*!
      *  \brief Convolution
      *
@@ -171,7 +155,6 @@ public:
      *
      *  \param listSongs : liste initial des morceaux
      */
->>>>>>> Stashed changes
 };
 
 #endif

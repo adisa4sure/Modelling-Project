@@ -4,4 +4,5 @@ Makefile
 bin
 lib
 cmake_install.cmake
-
+images
+compile_commands.json

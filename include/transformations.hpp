@@ -6,12 +6,6 @@
 using namespace cv;
 using namespace std;
 
-<<<<<<< Updated upstream
-void symmetry(Image image, string filename);
-void symmetryx(Image image, string filename);
-double lowerfunc(Point point1, Point point2);
-void weaken_pressure(Image image, Point center, int width, int height, double K);
-=======
 using namespace libfp::utils;
 
 namespace libfp {
@@ -123,6 +117,5 @@ namespace transformations {
 }
 }
 
->>>>>>> Stashed changes
 
 #endif
