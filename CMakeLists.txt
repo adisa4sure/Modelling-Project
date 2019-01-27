@@ -18,6 +18,14 @@ add_subdirectory(docs)
 include_directories(include)
 
 add_executable(main ./demo/main.cpp)
+<<<<<<< Updated upstream
+=======
+add_executable(starter-2 ./demo/starter-2.cxx)
+add_executable(maincourse1 ./demo/maincourse1.cxx)
+add_executable(save ./demo/saveim.cpp)
+add_executable(starter-3 ./demo/starter-3.cxx)
+
+>>>>>>> Stashed changes
 
 set(LIBS
     PUBLIC
@@ -30,3 +38,32 @@ target_include_directories(main
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )
+<<<<<<< Updated upstream
+=======
+target_link_libraries(starter-2 ${LIBS})
+
+target_include_directories(starter-2
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+target_link_libraries(maincourse1 ${LIBS})
+
+target_include_directories(maincourse1
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(save ${LIBS})
+
+target_include_directories(save
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+target_link_libraries(starter-3 ${LIBS})
+
+target_include_directories(starter-3
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+>>>>>>> Stashed changes
