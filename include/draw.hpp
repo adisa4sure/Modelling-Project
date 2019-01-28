@@ -1,7 +1,7 @@
 #ifndef DRAW_H
 #define DRAW_H
 
-#include "./../include/utils.hpp"
+#include "utils.hpp"
 
 using namespace cv;
 using namespace std;

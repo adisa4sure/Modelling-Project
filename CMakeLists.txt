@@ -12,21 +12,49 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 find_package(OpenCV REQUIRED)
+find_package(Doxygen)
+
+include_directories(include)
 
 add_subdirectory(src)
 add_subdirectory(docs)
-include_directories(include)
-
-add_executable(main ./demo/main.cpp)
+add_subdirectory(demo)
 
 set(LIBS
     PUBLIC
     ${OpenCV_LIBS}
-    libFingerPrint)
+    FingerPrint)
 
+add_executable(main ./demo/main.cpp)
 target_link_libraries(main ${LIBS})
 
 target_include_directories(main
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+add_executable(starter-2 ./demo/starter-2.cxx)
+
+target_link_libraries(starter-2 ${LIBS})
+
+target_include_directories(starter-2
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+add_executable(starter-3 ./demo/starter-3.cxx)
+
+target_link_libraries(starter-3 ${LIBS})
+
+target_include_directories(starter-3
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+add_executable(maincourse1 ./demo/maincourse1.cxx)
+
+target_link_libraries(maincourse1 ${LIBS})
+
+target_include_directories(maincourse1
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )

@@ -8,24 +8,34 @@ typedef std::function<void(int, int, int)> mouseCallback;
 
 int main()
 {
-  Image weak_fp("./images/weak_finger.png");
-  Mat black(Size(300, 300), CV_8U, Scalar(0));
-  Image blackim(black);
+  Image cleanim("./images/clean_finger.png");
   int i = 1;
-  blackim.show("ZBRE");
-  mouseCallback fn1 = [&blackim, &i](int event, int x, int y) -> void {
+  bool stay = 1;
+  double K;
+  cleanim.show();
+  mouseCallback fn1 = [&cleanim, &i, &stay, &K](int event, int x, int y) -> void {
           if(event != cv::EVENT_LBUTTONDOWN)
           {
-                  cout << "error" << endl;
                   return;
           } else {
-          cout << "CLICK" << endl;
+                  libfp::transformations::weaken_pressure(cleanim, Point(x,y), 1, 1, K);
+                  stay = 0;
           }
   };
-  blackim.registerCallback([](int event, int x, int y, int, void* callbackFunc) -> void {
+
+  cleanim.registerCallback([](int event, int x, int y, int, void* callbackFunc) -> void {
           (*(mouseCallback*)callbackFunc)(event, x, y);
   }, (void*)&fn1);
-  while(i){
-  libfp::utils::waitKey(10);
+  cout << "Enter the value of K, the parameter of the used function (see documentation to get more details) : " << endl;
+  cin >> K;
+  cout << "Click to select the center of the pressure weakening." << endl;
+  while(stay)
+  {
+    cleanim.show();
+    libfp::utils::waitKey(10);
   }
+  cout << "Press a key to quit." << endl;
+
+  cleanim.show();
+  libfp::utils::waitKey(0);
 }

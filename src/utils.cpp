@@ -49,9 +49,9 @@ namespace utils{
         Mat gaus_ker(int size)
         {
           double sigma = (size/SIGMA_CLIP + 0.5f);
-          Mat kernelX = getGaussianKernel(2*size+1, sigma, CV_32FC1);
-          Mat kernelY = getGaussianKernel(2*size+1, sigma, CV_32FC1);
-          Mat kernel = kernelX * kernelY.t();
+          Mat_<double> kernelX = getGaussianKernel(2*size+1, sigma, CV_32FC1);
+          Mat_<double> kernelY = getGaussianKernel(2*size+1, sigma, CV_32FC1);
+          Mat_<double> kernel = kernelX * kernelY.t();
           return kernel;
         }
 
@@ -105,7 +105,15 @@ Image::Image(string filename)
     width = mat.size().width;
     height = mat.size().height;
 
-    namedWindow(window_name, WINDOW_AUTOSIZE);
+    //namedWindow(window_name, WINDOW_AUTOSIZE);
+}
+
+Image::Image(Mat cmat, string wname)
+{
+  mat = cmat.clone();
+  width = mat.size().width;
+  height = mat.size().height;
+  window_name = wname;
 }
 
 Image Image::clone()
@@ -113,9 +121,7 @@ Image Image::clone()
     Image ret = Image(*this);
     ret.mat = mat.clone();
     ret.window_name = window_name + "_copy" + to_string(rand() % 1000);
-
     namedWindow(ret.window_name, WINDOW_AUTOSIZE);
-
     return ret;
 }
 
@@ -148,7 +154,7 @@ Size Image::getsize() const
     return mat.size();
 }
 
-void Image::convolve(Mat filter, bool half)
+void Image::convolve(Mat_<double> filter, bool half)
 {
   Size s = mat.size();
   int px = (filter.size().width-1)/2;
@@ -162,12 +168,7 @@ void Image::convolve(Mat filter, bool half)
   {
     imax = s.width - px;
   }
-  int noperations = (imax+1-px)*(s.height-2*py)*(2*px+1)*(2*py+1);
-  int count = 0;
   double sum;
-  double add;
-  cout << "Matrice : " << filter << endl;
-  cout<<"Number of operations : "<<noperations<<endl;
   for (int i = px; i < imax+1; i++)
   {
     for (int j = py; j < s.height-py; j++)
@@ -177,21 +178,10 @@ void Image::convolve(Mat filter, bool half)
       {
         for (int l = -py; l < py+1; l++)
         {
-          count++;
-          //cout << "coordinates" << Point(k+px, l+py) << endl;
-          //cout << "Intensity : " <<  intens << "\nFilter value : " << filter_val << endl;
-          //sum += mat.at<uchar>(j+l,i+k)*(filter.at<uchar>(l+py,k+px)/256);
-          add = double(mat.at<uchar>(j+l,i+k))*(double(filter.at<uchar>(l+py,k+px))/256);
-          sum += add;
-          //cout << "Adding : " << add << endl;
-          system("clear");
-          cout << count << "/" << noperations << endl;
-          //cout << "Adding : " << mat.at<uchar>(j+l,i+k)*filter.at<uchar>(l+py,k+px) << "\nSum = " << sum << endl;
+          sum += (double)mat.at<uchar>(j+l,i+k)*((double)filter.at<double>(l+py,k+px));
         }
       }
-      //cout << "Value pixel (" << i << "," << j << ") : " << sum << endl;
-      output.at<uchar>(j,i) = sum;
-      //cout << "Sum value : " << sum << endl;
+      output.at<uchar>(j,i) = int(sum);
     }
   }
   mat = output;

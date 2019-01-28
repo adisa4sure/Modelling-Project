@@ -2,11 +2,12 @@
 #define TRANSFORMATIONS_H
 
 #include "draw.hpp"
+#include "interpolation/interpolation.hpp"
 
 using namespace cv;
 using namespace std;
 
-using namespace libfp::utils;
+using namespace libfp;
 
 namespace libfp {
 namespace transformations {
@@ -96,6 +97,9 @@ namespace transformations {
           *
           *  Returns the evaluation of the function used to simulate a weaken pressure
           *  in point2, given the center point1
+          *  \f{equation}{
+          *   c(x,y) = \frac{1}{1+e^{(K + K*|cos(\theta (x,y))|)*(r(x,y)-s)}}
+          *   \f}
           *
           *  \param point1 : center
           *  \param point2 : point to modify
@@ -113,6 +117,8 @@ namespace transformations {
          *  \param K : parameter for the lower_func used
          */
         void weaken_pressure(Image image, Point center, int width, int height, double K);
+        void blur_fc(Image image, int ksize);
+        void blur_gc(Image image, int ksize);
 
 }
 }

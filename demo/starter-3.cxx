@@ -1,24 +1,37 @@
 #include "transformations.hpp"
+#include <chrono>
 
 int main()
 {
-  Image image("./images/clean_finger.png");
-  namedWindow("Fourier, kernel 10x10");
-  namedWindow("Fourier, kernel 3x3");
-  Mat ff = fourier(image.getmat());
-  Mat ker1ff = fourier(fill_ker(gaus_ker(10), image.getsize()));
-  Mat ker2ff = fourier(fill_ker(gaus_ker(3), image.getsize()));
   Mat output1, output2, result1, result2, final1, final2;
-  mulSpectrums(ff, ker1ff, output1, 0);
-  mulSpectrums(ff, ker2ff, output2, 0);
-  idft(output1, result1, DFT_REAL_OUTPUT);
-  idft(output2, result2, DFT_REAL_OUTPUT);
-  result1.convertTo(final1, CV_8U);
-  result2.convertTo(final2, CV_8U);
-  shift(final1);
-  shift(final2);
-  imshow("Fourier, kernel 10x10", final1);
-  imshow("Fourier, kernel 3x3", final2);
-  imshow("Clean", image.getmat());
+
+  Image image("./images/clean_finger.png");
+  Image image2("./images/clean_finger.png");
+  Image clean("./images/clean_finger.png");
+  namedWindow("Difference between reults");
+  namedWindow("Fourier, kernel 3x3");
+  namedWindow("Greedy convolution, kernel 3x3");
+
+  auto beginningf = chrono::high_resolution_clock::now();
+
+  libfp::transformations::blur_fc(image, 10);
+
+  auto endf = chrono::high_resolution_clock::now();
+  chrono::duration<double> elapsedf = endf - beginningf;
+
+  auto beginningc = chrono::high_resolution_clock::now();
+
+  libfp::transformations::blur_gc(image2, 10);
+
+  auto endc = chrono::high_resolution_clock::now();
+  chrono::duration<double> elapsedc = endc - beginningc;
+
+  cout << "Fourier convolution time : " << elapsedf.count() << "seconds." << endl;
+  cout << "Greedy convolution time : " << elapsedc.count() << "seconds." << endl;
+
+  imshow("Greedy convolution, kernel 3x3", image2.getmat());
+  imshow("Clean", clean.getmat());
+  imshow("Fourier, kernel 3x3", image.getmat());
+  imshow("Difference between results", cv::abs(clean.getmat()-image2.getmat()));
   libfp::utils::waitKey(0);
 }

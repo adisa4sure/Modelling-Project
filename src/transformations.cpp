@@ -162,7 +162,7 @@ namespace transformations {
         double lowerfunc(Point point1, Point point2, double K)
         {
           //double result = 1/(1+exp(K*(distance(point1, point2)- 120)));
-          double result = 1/(1+exp((K+K*abs(costheta(point1, point2)))*(distance(point1, point2) - 120 + 30*abs(costheta(point1, point2)))));
+          double result = 1/(1+exp((K+K*abs(utils::costheta(point1, point2)))*(utils::distance(point1, point2) - 120 + 30*abs(utils::costheta(point1, point2)))));
           return result;
         }
 
@@ -184,6 +184,27 @@ namespace transformations {
           image.setmat(immat);
         }
 
+        void blur_fc(Image &image, int ksize)
+        {
+          Mat temp1, temp2, temp3, temp4;
+          Mat kerft = utils::fourier(utils::fill_ker(utils::gaus_ker((ksize-1)/2), image.getsize()));
+          Mat imft = utils::fourier(image.getmat());
+          mulSpectrums(imft, kerft, temp1, 0);
+          idft(temp1, temp2, DFT_REAL_OUTPUT);
+          temp2.convertTo(temp1, CV_8U);
+          utils::shift(temp1);
+          namedWindow("temp1");
+          imshow("temp1", temp1);
+          utils::waitKey(0);
+          image.setmat(temp1);
+        }
+        void blur_gc(Image image, int ksize)
+        {
+          cout << "Gaus ker : " << utils::gaus_ker((ksize-1)/2);
+          image.convolve(utils::gaus_ker((ksize-1)/2));
+          namedWindow("fourier inter");
+          imshow("fourier inter", image.getmat());
+        }
 
 
 }

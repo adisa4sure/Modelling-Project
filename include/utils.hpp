@@ -9,7 +9,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "draw.hpp"
 
 using namespace cv;
 using namespace std;
@@ -100,7 +99,7 @@ public:
      *
      *  \param filename : string containing the path to the image to open
      */
-  Image(Mat cmat);
+  Image(Mat cmat, string);
   /*!
      *  \brief Display
      *
@@ -114,7 +113,7 @@ public:
      *
      *  Returns the Mat of the image
      */
-  Mat getmat();
+  Mat getmat() const;
   /*!
      *  \brief Setter
      *
@@ -130,7 +129,7 @@ public:
      *
      *  \param listSongs : liste initial des morceaux
      */
-  Size getsize();
+  Size getsize() const;
   /*!
      *  \brief Convolution
      *
@@ -139,7 +138,7 @@ public:
      *  \param filter : kernel
      *  \param half : only modifies half of the image if it is True
      */
-  void convolve(Mat filter, bool half = 0);
+  void convolve(Mat_<double> filter, bool half = 0);
   /*!
      *  \brief Constructeur
      *
@@ -155,6 +154,7 @@ public:
      *
      *  \param listSongs : liste initial des morceaux
      */
+  Image clone();
 };
 
 #endif
