@@ -186,24 +186,19 @@ namespace transformations {
 
         void blur_fc(Image &image, int ksize)
         {
-          Mat temp1, temp2, temp3, temp4;
+          Mat temp1, temp2;
           Mat kerft = utils::fourier(utils::fill_ker(utils::gaus_ker((ksize-1)/2), image.getsize()));
           Mat imft = utils::fourier(image.getmat());
           mulSpectrums(imft, kerft, temp1, 0);
           idft(temp1, temp2, DFT_REAL_OUTPUT);
           temp2.convertTo(temp1, CV_8U);
           utils::shift(temp1);
-          namedWindow("temp1");
-          imshow("temp1", temp1);
           utils::waitKey(0);
           image.setmat(temp1);
         }
-        void blur_gc(Image image, int ksize)
+        void blur_gc(Image &image, int ksize)
         {
-          cout << "Gaus ker : " << utils::gaus_ker((ksize-1)/2);
           image.convolve(utils::gaus_ker((ksize-1)/2));
-          namedWindow("fourier inter");
-          imshow("fourier inter", image.getmat());
         }
 
 
