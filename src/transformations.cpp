@@ -201,6 +201,5 @@ namespace transformations {
           image.convolve(utils::gaus_ker((ksize-1)/2));
         }
 
-
 }
 }

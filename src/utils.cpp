@@ -186,3 +186,114 @@ void Image::convolve(Mat_<double> filter, bool half)
   }
   mat = output;
 }
+
+void Image::binarization(int threshold){
+    if(threshold < 0 || threshold > 255){
+        cout << "threshold not in range 0-255";
+        std::exit(EXIT_FAILURE);
+    }
+    int x = this -> width;
+    int y = this -> height;
+    for(unsigned int i = 0; i < x; i++){
+        for(unsigned int j = 0; j < y; j++){
+            if(mat.at<uchar>(j,i) < threshold){
+                mat.at<uchar>(j,i) = 0;
+            }
+            else{
+                mat.at<uchar>(j,i) = 1;
+            }
+        }
+    }
+}
+
+void Image::grayscale(){
+    int x = this -> width;
+    int y = this -> height;
+    for(unsigned int i = 0; i < x; i++){
+        for(unsigned int j = 0; j < y; j++){
+            mat.at<uchar>(j,i) *= 255;
+        }
+    }
+}
+
+Kernel::Kernel(int dim, int x, int y, std::string type){
+    if (x < 0 || dim <= x || y < 0 || dim <= y){
+        cout << "Wrong origin values - default set to (0,0)";
+        x_ori = 0;
+        y_ori = 0;
+    }
+    this -> dim = dim;
+    if(std::string("Square").compare(type) == 0){
+        mask = Mat::ones(dim, dim, CV_32F);
+    }
+}
+
+Mat Kernel::getmask() const {
+    return mask;
+}
+
+int Kernel::getdim() const {
+    return dim;
+}
+
+Point Kernel::getorig() const {
+    return Point(x_ori, y_ori);
+}
+
+int Kernel::erode(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return 1;
+    }
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(i,j) == 1 && mask.at<uchar>(i,j) != 1){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int Kernel::dilate(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return 0;
+    }
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(i,j) == 1 && image.at<uchar>(i,j) == 1){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+Image erosion(Image image, Kernel kernel, int threshold){
+    Image output = image.clone();
+    output.binarization(threshold);
+    Size s = image.getsize();
+    Point orig = kernel.getorig();
+    for (unsigned int i = 0; i < s.width; i++){
+        for (unsigned int j = 0; j < s.height; j++){
+            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
+            (output.getmat()).at<uchar>(i,j) = 255*kernel.erode(extract);
+      }
+    }
+    return output;
+}
+
+Image dilatation(Image image, Kernel kernel, int threshold){
+    Image output = image.clone();
+    output.binarization(threshold);
+    Size s = image.getsize();
+    Point orig = kernel.getorig();
+    for (unsigned int i = 0; i < s.width; i++){
+        for (unsigned int j = 0; j < s.height; j++){
+            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
+            (output.getmat()).at<uchar>(i,j) = kernel.dilate(extract);
+      }
+  }
+  return output;
+}

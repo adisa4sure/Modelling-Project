@@ -155,6 +155,23 @@ public:
      *  \param listSongs : liste initial des morceaux
      */
   Image clone();
+  void binarization(int threshold);
+  void grayscale();
+};
+
+class Kernel{
+    private:
+        cv::Mat mask;
+        int dim;
+        int x_ori;
+        int y_ori;
+    public:
+        Kernel(int dim, int x, int y, std::string type);
+        cv::Mat getmask() const;
+        int getdim() const;
+        cv::Point getorig() const;
+        int erode(cv::Mat image);
+        int dilate(cv::Mat image);
 };
 
 #endif

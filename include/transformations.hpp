@@ -1,6 +1,7 @@
 #ifndef TRANSFORMATIONS_H
 #define TRANSFORMATIONS_H
 
+#include <functional>
 #include "draw.hpp"
 #include "interpolation/interpolation.hpp"
 
@@ -119,7 +120,6 @@ namespace transformations {
         void weaken_pressure(Image image, Point center, int width, int height, double K);
         void blur_fc(Image &image, int ksize);
         void blur_gc(Image &image, int ksize);
-
 }
 }
 
