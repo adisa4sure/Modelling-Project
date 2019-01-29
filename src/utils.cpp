@@ -196,7 +196,7 @@ void Image::binarization(int threshold){
     int y = this -> height;
     for(unsigned int i = 0; i < x; i++){
         for(unsigned int j = 0; j < y; j++){
-            if(mat.at<uchar>(j,i) < threshold){
+            if(mat.at<uchar>(j,i) <= threshold){
                 mat.at<uchar>(j,i) = 0;
             }
             else{
@@ -223,8 +223,28 @@ Kernel::Kernel(int dim, int x, int y, std::string type){
         y_ori = 0;
     }
     this -> dim = dim;
+    this -> x_ori = x;
+    this -> y_ori = y;
     if(std::string("Square").compare(type) == 0){
-        mask = Mat::ones(dim, dim, CV_32F);
+        mask = Mat::ones(dim, dim, CV_8U);
+    }
+    else if(std::string("Plus").compare(type) == 0){
+        if (dim%2 != 1){
+            cout << "Wrong dimension for this kind of kernel - Enter an odd one" << endl;
+            cout << "Default set to square" << endl;
+            mask = Mat::ones(dim, dim, CV_8U);
+        } else {
+            mask = Mat::zeros(dim, dim, CV_8U);
+            int center = dim/2;
+            for(unsigned int i = 0; i < dim; i++){
+                mask.at<uchar>(center, i) = 1;
+                mask.at<uchar>(i, center) = 1;
+            }
+        }
+    }
+    else {
+        cout << "Unknown type for kernel - Default set to square" << endl;
+        mask = Mat::ones(dim, dim, CV_8U);
     }
 }
 
@@ -243,11 +263,11 @@ Point Kernel::getorig() const {
 int Kernel::erode(Mat image){
     if(mask.size() != image.size()){
         cout << "Wrong dimension in the matrix";
-        return 1;
+        return image.at<uchar>(y_ori, x_ori);
     }
     for(unsigned int i = 0; i < dim; i++){
         for(unsigned int j = 0; j < dim; j++){
-            if(mask.at<uchar>(i,j) == 1 && mask.at<uchar>(i,j) != 1){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) != 0){
                 return 1;
             }
         }
@@ -258,16 +278,16 @@ int Kernel::erode(Mat image){
 int Kernel::dilate(Mat image){
     if(mask.size() != image.size()){
         cout << "Wrong dimension in the matrix";
-        return 0;
+        return image.at<uchar>(y_ori, x_ori);
     }
     for(unsigned int i = 0; i < dim; i++){
         for(unsigned int j = 0; j < dim; j++){
-            if(mask.at<uchar>(i,j) == 1 && image.at<uchar>(i,j) == 1){
-                return 1;
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) == 0){
+                return 0;
             }
         }
     }
-    return 0;
+    return 1;
 }
 
 Image erosion(Image image, Kernel kernel, int threshold){

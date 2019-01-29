@@ -14,10 +14,17 @@
 Image erosion(Image image, Kernel kernel, int threshold){
     Image output = image.clone();
     output.binarization(threshold);
+    image.binarization(threshold);
     Mat output_mat = output.getmat();
     Size s = image.getsize();
     int dim = kernel.getdim();
     Point orig = kernel.getorig();
+    for(unsigned int i = orig.x; i <= s.width - dim + orig.x; i++){
+        for(unsigned int j = orig.y; j <= s.height- dim + orig.y; j++){
+            Mat extract(image.getmat(), Rect(i - orig.x, j-orig.y, dim, dim));
+            output_mat.at<uchar>(j,i) = kernel.erode(extract);
+        }
+    }
     output.setmat(output_mat);
     return output;
 }
@@ -25,21 +32,28 @@ Image erosion(Image image, Kernel kernel, int threshold){
 Image dilatation(Image image, Kernel kernel, int threshold){
     Image output = image.clone();
     output.binarization(threshold);
+    image.binarization(threshold);
+    Mat output_mat = output.getmat();
     Size s = image.getsize();
+    int dim = kernel.getdim();
     Point orig = kernel.getorig();
-    for (unsigned int i = 0; i < s.width; i++){
-        for (unsigned int j = 0; j < s.height; j++){
-            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
-            (output.getmat()).at<uchar>(i,j) = kernel.dilate(extract);
-      }
-  }
-  return output;
+    for(unsigned int i = orig.x; i <= s.width - dim + orig.x; i++){
+        for(unsigned int j = orig.y; j <= s.height- dim + orig.y; j++){
+            Mat extract(image.getmat(), Rect(i - orig.x, j-orig.y, dim, dim));
+            output_mat.at<uchar>(j,i) = kernel.dilate(extract);
+        }
+    }
+    output.setmat(output_mat);
+    return output;
 }
 
 int main(){
     Image image("./images/clean_finger.png");
-    Kernel kernel(3, 1, 1, "Square");
-    Image test = erosion(image, kernel, 127);
+    Kernel kernel(3, 1, 1, "Plus");
+    int threshold = 100;
+    Image test = dilatation(image, kernel, threshold);
+    image.grayscale();
+    image.show();
     test.grayscale();
     test.show();
     libfp::utils::waitKey(0);
