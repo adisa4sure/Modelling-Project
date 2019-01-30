@@ -290,30 +290,34 @@ int Kernel::dilate(Mat image){
     return 1;
 }
 
-Image erosion(Image image, Kernel kernel, int threshold){
-    Image output = image.clone();
-    output.binarization(threshold);
-    Size s = image.getsize();
-    Point orig = kernel.getorig();
-    for (unsigned int i = 0; i < s.width; i++){
-        for (unsigned int j = 0; j < s.height; j++){
-            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
-            (output.getmat()).at<uchar>(i,j) = 255*kernel.erode(extract);
-      }
+int Kernel::dilate_gray(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
     }
-    return output;
+    int min = 255;
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) < min){
+                min = image.at<uchar>(j,i);
+            }
+        }
+    }
+    return min;
 }
 
-Image dilatation(Image image, Kernel kernel, int threshold){
-    Image output = image.clone();
-    output.binarization(threshold);
-    Size s = image.getsize();
-    Point orig = kernel.getorig();
-    for (unsigned int i = 0; i < s.width; i++){
-        for (unsigned int j = 0; j < s.height; j++){
-            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
-            (output.getmat()).at<uchar>(i,j) = kernel.dilate(extract);
-      }
-  }
-  return output;
+int Kernel::erode_gray(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    int max = 0;
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) > max){
+                max = image.at<uchar>(j,i);
+            }
+        }
+    }
+    return max;
 }

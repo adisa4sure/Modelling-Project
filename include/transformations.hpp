@@ -120,6 +120,8 @@ namespace transformations {
         void weaken_pressure(Image image, Point center, int width, int height, double K);
         void blur_fc(Image &image, int ksize);
         void blur_gc(Image &image, int ksize);
+
+        
 }
 }
 

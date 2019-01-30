@@ -172,6 +172,9 @@ class Kernel{
         cv::Point getorig() const;
         int erode(cv::Mat image);
         int dilate(cv::Mat image);
+        int erode_gray(Mat image);
+        int dilate_gray(Mat image);
+
 };
 
 #endif
