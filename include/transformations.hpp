@@ -3,6 +3,7 @@
 
 #include "draw.hpp"
 #include "interpolation/interpolation.hpp"
+#include <functional>
 
 using namespace cv;
 using namespace std;
@@ -83,7 +84,12 @@ namespace transformations {
           *
           *  \param image : the image to modify
           */
-        void symmetryy(Image image);
+          void negative(Image& image, string filename);
+          /* negative
+
+
+          */
+        void symmetryy(Image& image, string filename);
         /*!
          *  \brief Symmetry/x
          *
@@ -91,7 +97,7 @@ namespace transformations {
          *
          *  \param image : the image to modify
          */
-        void symmetryx(Image image);
+        void symmetryx(Image& image, string filename);
          /*!
           *  \brief Sigmoid
           *

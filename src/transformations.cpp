@@ -133,7 +133,21 @@ namespace transformations {
 
                 return (Mat)omat;
         }
-        void symmetryy(Image image)
+
+        void negative(Image& image, string filename)
+        {
+          Mat imagemat = image.getmat();
+          Size taille = image.getsize();
+          Mat modified_img(taille, CV_8U);
+          for (int x = 0; x < taille.width; x++){
+            for (int y = 0; y < taille.height;y++){
+              modified_img.at<uchar>(Point(x,y)) = 255 - imagemat.at<uchar>(Point(x,y));
+            }
+          }
+          image.setmat(modified_img);
+        }
+
+        void symmetryy(Image& image, string filename)
         {
           Mat imagemat = image.getmat();
           Size taille = image.getsize();
@@ -144,9 +158,10 @@ namespace transformations {
             }
           }
           image.setmat(modified_img);
+
         }
 
-        void symmetryx(Image image, string filename)
+        void symmetryx(Image& image, string filename)
         {
           Mat imagemat = image.getmat();
           Size taille = image.getsize();

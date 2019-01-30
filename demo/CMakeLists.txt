@@ -10,3 +10,15 @@ target_include_directories(basic_opencv
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )
+add_executable(starter-1 starter-1.cxx)
+
+target_link_libraries(starter-1
+        PUBLIC
+        ${OpenCV_LIBS}
+        FingerPrint
+)
+target_include_directories(starter-1
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+        ../include
+)
