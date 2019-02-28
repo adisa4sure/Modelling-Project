@@ -191,3 +191,138 @@ void Image::convolve(Mat_<double> filter, bool half)
   }
   mat = output;
 }
+
+void Image::binarization(int threshold){
+    if(threshold < 0 || threshold > 255){
+        cout << "threshold not in range 0-255";
+        std::exit(EXIT_FAILURE);
+    }
+    int x = this -> width;
+    int y = this -> height;
+    for(unsigned int i = 0; i < x; i++){
+        for(unsigned int j = 0; j < y; j++){
+            if(mat.at<uchar>(j,i) <= threshold){
+                mat.at<uchar>(j,i) = 0;
+            }
+            else{
+                mat.at<uchar>(j,i) = 1;
+            }
+        }
+    }
+}
+
+void Image::grayscale(){
+    int x = this -> width;
+    int y = this -> height;
+    for(unsigned int i = 0; i < x; i++){
+        for(unsigned int j = 0; j < y; j++){
+            mat.at<uchar>(j,i) *= 255;
+        }
+    }
+}
+
+Kernel::Kernel(int dim, int x, int y, std::string type){
+    if (x < 0 || dim <= x || y < 0 || dim <= y){
+        cout << "Wrong origin values - default set to (0,0)";
+        x_ori = 0;
+        y_ori = 0;
+    }
+    this -> dim = dim;
+    this -> x_ori = x;
+    this -> y_ori = y;
+    if(std::string("Square").compare(type) == 0){
+        mask = Mat::ones(dim, dim, CV_8U);
+    }
+    else if(std::string("Plus").compare(type) == 0){
+        if (dim%2 != 1){
+            cout << "Wrong dimension for this kind of kernel - Enter an odd one" << endl;
+            cout << "Default set to square" << endl;
+            mask = Mat::ones(dim, dim, CV_8U);
+        } else {
+            mask = Mat::zeros(dim, dim, CV_8U);
+            int center = dim/2;
+            for(unsigned int i = 0; i < dim; i++){
+                mask.at<uchar>(center, i) = 1;
+                mask.at<uchar>(i, center) = 1;
+            }
+        }
+    }
+    else {
+        cout << "Unknown type for kernel - Default set to square" << endl;
+        mask = Mat::ones(dim, dim, CV_8U);
+    }
+}
+
+Mat Kernel::getmask() const {
+    return mask;
+}
+
+int Kernel::getdim() const {
+    return dim;
+}
+
+Point Kernel::getorig() const {
+    return Point(x_ori, y_ori);
+}
+
+int Kernel::erode(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) != 0){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int Kernel::dilate(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) == 0){
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int Kernel::dilate_gray(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    int min = 255;
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) < min){
+                min = image.at<uchar>(j,i);
+            }
+        }
+    }
+    return min;
+}
+
+int Kernel::erode_gray(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    int max = 0;
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) > max){
+                max = image.at<uchar>(j,i);
+            }
+        }
+    }
+    return max;
+}

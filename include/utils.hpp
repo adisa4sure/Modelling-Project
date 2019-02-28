@@ -156,6 +156,26 @@ public:
      */
   Image clone();
   void apply_noise();
+  void binarization(int threshold);
+  void grayscale();
+};
+
+class Kernel{
+    private:
+        cv::Mat mask;
+        int dim;
+        int x_ori;
+        int y_ori;
+    public:
+        Kernel(int dim, int x, int y, std::string type);
+        cv::Mat getmask() const;
+        int getdim() const;
+        cv::Point getorig() const;
+        int erode(cv::Mat image);
+        int dilate(cv::Mat image);
+        int erode_gray(Mat image);
+        int dilate_gray(Mat image);
+
 };
 
 #endif

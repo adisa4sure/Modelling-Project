@@ -58,3 +58,12 @@ target_include_directories(maincourse1
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )
+
+add_executable(starter4 ./demo/starter4.cxx)
+
+target_link_libraries(starter4 ${LIBS})
+
+target_include_directories(starter4
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)

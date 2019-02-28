@@ -1,6 +1,7 @@
 #ifndef TRANSFORMATIONS_H
 #define TRANSFORMATIONS_H
 
+#include <functional>
 #include "draw.hpp"
 #include "interpolation/interpolation.hpp"
 
