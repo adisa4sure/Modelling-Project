@@ -83,7 +83,7 @@ namespace transformations {
           *
           *  \param image : the image to modify
           */
-        void symmetryy(Image image);
+        void symmetryy(Image& image);
         /*!
          *  \brief Symmetry/x
          *
@@ -91,7 +91,7 @@ namespace transformations {
          *
          *  \param image : the image to modify
          */
-        void symmetryx(Image image);
+        void symmetryx(Image& image);
          /*!
           *  \brief Sigmoid
           *
@@ -117,9 +117,13 @@ namespace transformations {
          *  \param K : parameter for the lower_func used
          */
         void weaken_pressure(Image image, Point center, int width, int height, double K);
-        void blur_fc(Image image, int ksize);
-        void blur_gc(Image image, int ksize);
-
+        void blur_fc(Image &image, int ksize);
+        void blur_gc(Image &image, int ksize);
+        void negative(Image& image);
+        Image erosion(Image& image, Kernel kernel, int threshold);
+        Image dilatation(Image& image, Kernel kernel, int threshold);
+        Image gray_erosion(Image& image, Kernel kernel);
+        Image gray_dilatation(Image& image, Kernel kernel);
 }
 }
 

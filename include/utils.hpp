@@ -155,6 +155,7 @@ public:
      *  \param listSongs : liste initial des morceaux
      */
   Image clone();
+  void apply_noise();
 };
 
 #endif

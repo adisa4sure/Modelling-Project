@@ -121,7 +121,7 @@ Image Image::clone()
     Image ret = Image(*this);
     ret.mat = mat.clone();
     ret.window_name = window_name + "_copy" + to_string(rand() % 1000);
-    namedWindow(ret.window_name, WINDOW_AUTOSIZE);
+    //namedWindow(ret.window_name, WINDOW_AUTOSIZE);
     return ret;
 }
 
@@ -152,6 +152,11 @@ void Image::setmat(Mat newmat)
 Size Image::getsize() const
 {
     return mat.size();
+}
+
+void Image::apply_noise(Image noise)
+{
+  
 }
 
 void Image::convolve(Mat_<double> filter, bool half)
