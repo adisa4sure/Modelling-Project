@@ -3,10 +3,8 @@ find_package(Doxygen)
 if(NOT DOXYGEN_FOUND)
     message("Doxygen not found, I will not generate/install the documentation")
 else()
-   configure_file(doxyfilerc Doxyfile)
-
    set(DOXYGEN_INPUT ${CMAKE_BINARY_DIR}/docs/Doxyfile)
-   set(DOXYGEN_OUTPUT ${APIDOC_DIR}/html/index.html)
+   set(DOXYGEN_OUTPUT ${CMAKE_BINARY_DIR}/docs/html/index.html)
 
    add_custom_target(doc ALL
      COMMAND ${CMAKE_COMMAND} -E echo_append "Building API Documentation..."
@@ -14,7 +12,7 @@ else()
      COMMAND ${CMAKE_COMMAND} -E echo "Done."
      )
 
-  install(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html 
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/docs/html
           DESTINATION share/doc/${CMAKE_PROJECT_NAME})
 
 endif()

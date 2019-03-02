@@ -59,11 +59,29 @@ target_include_directories(maincourse1
         ${OpenCV_INCLUDE_DIRS}
 )
 
+add_executable(maincourse1v2 ./demo/maincourse1_v2.cxx)
+
+target_link_libraries(maincourse1v2 ${LIBS})
+
+target_include_directories(maincourse1v2
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+
 add_executable(starter4 ./demo/starter4.cxx)
 
 target_link_libraries(starter4 ${LIBS})
 
 target_include_directories(starter4
+        PUBLIC
+        ${OpenCV_INCLUDE_DIRS}
+)
+
+add_executable(maincourse3 ./demo/maincourse3.cxx)
+
+target_link_libraries(maincourse3 ${LIBS})
+
+target_include_directories(maincourse3
         PUBLIC
         ${OpenCV_INCLUDE_DIRS}
 )

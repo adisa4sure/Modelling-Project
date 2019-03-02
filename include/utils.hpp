@@ -9,7 +9,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-
 using namespace cv;
 using namespace std;
 
@@ -87,7 +86,7 @@ public:
   /*!
      *  \brief Constructeur
      *
-     *  Constructor of the Image class
+     *  Constructor of the Image class from a file
      *
      *  \param filename : string containing the path to the image to open
      */
@@ -95,11 +94,12 @@ public:
   /*!
      *  \brief Constructeur
      *
-     *  Constructor of the Image class
+     *  Constructor of the Image class from a Mat
      *
-     *  \param filename : string containing the path to the image to open
+     *  \param cmat : Mat set as the image
+     *  \param name : string used for the window name
      */
-  Image(Mat cmat, string);
+  Image(Mat cmat, string name);
   /*!
      *  \brief Display
      *
@@ -140,42 +140,131 @@ public:
      */
   void convolve(Mat_<double> filter, bool half = 0);
   /*!
-     *  \brief Constructeur
+     *  \brief Links callback
      *
-     *  Constructeur de la classe CPlayer
+     *  Links a
      *
-     *  \param listSongs : liste initial des morceaux
+     *  \param callback :
      */
   void registerCallback(MouseCallback callback, void* userdata = 0);
   /*!
-     *  \brief Constructeur
+     *  \brief Clone
      *
-     *  Constructeur de la classe CPlayer
+     *  Returns a copy of the Image
      *
-     *  \param listSongs : liste initial des morceaux
      */
   Image clone();
-  void apply_noise();
+  /*!
+     *  \brief Applies noise
+     *
+     *  Merges the image with the noise given in parameter
+     *
+     *  \param noiseim : noise Image used for the merge
+     */
+  void apply_noise(Image& noiseim);
+  /*!
+     *  \brief Binarize the image
+     *
+     *  Convert the values of the image's matrix in 0 or 1 depending on if there are above
+     *  or below a certain value (threshold).
+     *
+     *  \param threshold : value used as threshold
+     */
   void binarization(int threshold);
+  /*!
+     *  \brief Convert a binarized image
+     *
+     *  Convert a binarized image to a black and white image.
+     *
+     */
   void grayscale();
 };
 
-class Kernel{
-    private:
-        cv::Mat mask;
-        int dim;
-        int x_ori;
-        int y_ori;
-    public:
-        Kernel(int dim, int x, int y, std::string type);
-        cv::Mat getmask() const;
-        int getdim() const;
-        cv::Point getorig() const;
-        int erode(cv::Mat image);
-        int dilate(cv::Mat image);
-        int erode_gray(Mat image);
-        int dilate_gray(Mat image);
 
-};
+/*! \class Kernel
+ * \brief Class containing the kernel/mask used to filter an image
+ *  This class contains the kernel's Mat (a matrix corresponding to shape of the mask),
+ *  a few other characteristics like the dimension of this matrix, an origin point,
+ *  and methods to apply this filter to an image
+ *
+ */
+ class Kernel{
+     private:
+         cv::Mat mask; /*!< Matrix of type Mat (from opencv) that contains the shape of the kernel*/
+         int dim;  /*!< Dimension of the matrix Mat (height = width)*/
+         int x_ori; /*!< Abscissa of the origin point*/
+         int y_ori;  /*!< Ordinate of the origin point*/
+     public:
+         /*!
+            *  \brief Constructor
+            *
+            *  Constructor of the Kernel class
+            *
+            *  \param dim : dimension of the matrix Mat
+            *  \param x : abscissa of the origin point
+            *  \param y : ordnate of the origin point
+            *  \param type : indicate the shape of the kernel : "Square" or "Plus"
+            */
+         Kernel(int dim, int x, int y, std::string type);
+         /*!
+            *  \brief Getter
+            *
+            *  Returns the Mat of the kernel
+            */
+         cv::Mat getmask() const;
+         /*!
+            *  \brief Getter
+            *
+            *  Returns the dimension of the kernel's matrix
+            */
+         int getdim() const;
+         /*!
+            *  \brief Getter
+            *
+            *  Returns the origin point of the kernel's matrix
+            */
+         cv::Point getorig() const;
+         /*!
+            *  \brief Erosion operation
+            *
+            *  Returns the value of the image's pixel corresponding
+            *  to the kernel's origin after erosion.
+            *  This method only works for black and white images.
+            *
+            *  \param image : matrix on which the filter is applied
+            */
+         int erode(cv::Mat image);
+         /*!
+            *  \brief Dilatation operation
+            *
+            *  Returns the value of the image's pixel corresponding
+            *  to the kernel's origin after dilatation.
+            *  This method only works for black and white images.
+            *
+            *  \param image : matrix on which the filter is applied
+            */
+         int dilate(cv::Mat image);
+         /*!
+            *  \brief Erosion operation
+            *
+            *  Returns the value of the image's pixel corresponding
+            *  to the kernel's origin after erosion.
+            *  Works for grayscale images.
+            *
+            *  \param image : matrix on which the filter is applied
+            */
+         int erode_gray(Mat image);
+         /*!
+            *  \brief Dilatation operation
+            *
+            *  Returns the value of the image's pixel corresponding
+            *  to the kernel's origin after dilation.
+            *  Works for grayscale images.
+            *
+            *  \param image : matrix on which the filter is applied
+            */
+         int dilate_gray(Mat image);
+
+ };
 
 #endif

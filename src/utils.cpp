@@ -8,6 +8,7 @@ namespace utils{
         void waitKey(int ms){
                 cv::waitKey(ms);
         }
+
         void savemat(Mat mat, string filename)
         {
           stringstream ss;
@@ -46,6 +47,7 @@ namespace utils{
           dft(ff_in, ff_out, DFT_COMPLEX_OUTPUT );
           return(ff_out);
         }
+        
         Mat gaus_ker(int size)
         {
           double sigma = (size/SIGMA_CLIP + 0.5f);
@@ -154,9 +156,17 @@ Size Image::getsize() const
     return mat.size();
 }
 
-void Image::apply_noise(Image noise)
+void Image::apply_noise(Image& noiseim)
 {
-  
+  Mat noisem = noiseim.getmat();
+  cout << "width : " << width << "\nheight : " << height << endl;
+   for (int i = 0; i < width;i++)
+   {
+     for (int j = 0; j < height;j++)
+     {
+        mat.at<uchar>(j,i) = min(255, mat.at<uchar>(j,i) + 2*abs(125 - noisem.at<uchar>(j,i)));
+     }
+   }
 }
 
 void Image::convolve(Mat_<double> filter, bool half)

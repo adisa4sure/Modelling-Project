@@ -116,14 +116,74 @@ namespace transformations {
          *  \param width : width of the rectangle to modify
          *  \param height : height of the rectangle to modify
          *  \param K : parameter for the lower_func used
+         *  \param s : parameter for the lower_func used
          */
-        void weaken_pressure(Image image, Point center, int width, int height, double K);
+        void weaken_pressure(Image image, Point center, int width, int height, double K, int s);
+        /*!
+         *  \brief Blur
+         *
+         *  Blurs the image using the Fourier convolution
+         *
+         *  \param image : the image to modify
+         *  \param ksize : size of the Gaussian kerel used to blur the image
+         */
         void blur_fc(Image &image, int ksize);
+        /*!
+         *  \brief Blur
+         *
+         *  Blurs the image using the greedy convolution
+         *
+         *  \param image : the image to modify
+         *  \param ksize : size of the Gaussian kerel used to blur the image
+         */
         void blur_gc(Image &image, int ksize);
+        /*!
+         *  \brief Negative
+         *
+         * Inverts the grayscale : black and whites are permuted
+         *
+         *  \param image : the image to modify
+         */
         void negative(Image& image);
+        /*!
+         *  \brief Erosion filtering
+         *
+         *  Performs the erosion operation on an image given a kernel.
+         *  This methods converts images in black and white.
+         *
+         *  \param image : Image to modify
+         *  \param kernel : kernel(or mask) applied to the image in order to filter it
+         *  \param threshold : threshold used for the binarization of the image
+         */
         Image erosion(Image& image, Kernel kernel, int threshold);
+        /*!
+         *  \brief Dilatation filtering
+         *
+         *  Performs the erosion operation on an image given a kernel.
+         *  This methods converts images in black and white.
+         *
+         *  \param image : Image to modify
+         *  \param kernel : kernel(or mask) applied to the image in order to filter it
+         *  \param threshold : threshold used for the binarization of the image
+         */
         Image dilatation(Image& image, Kernel kernel, int threshold);
+        /*!
+         *  \brief Grayscale erosion filtering
+         *
+         *  Performs the erosion operation on an image given a kernel.
+         *
+         *  \param image : Image to modify
+         *  \param kernel : kernel(or mask) applied to the image in order to filter it
+         */
         Image gray_erosion(Image& image, Kernel kernel);
+        /*!
+         *  \brief Grayscale dilatation filtering
+         *
+         *  Performs the erosion operation on an image given a kernel.
+         *
+         *  \param image : Image to modify
+         *  \param kernel : kernel(or mask) applied to the image in order to filter it
+         */
         Image gray_dilatation(Image& image, Kernel kernel);
 }
 }
