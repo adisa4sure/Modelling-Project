@@ -8,6 +8,7 @@ namespace utils{
         void waitKey(int ms){
                 cv::waitKey(ms);
         }
+
         void savemat(Mat mat, string filename)
         {
           stringstream ss;
@@ -46,6 +47,7 @@ namespace utils{
           dft(ff_in, ff_out, DFT_COMPLEX_OUTPUT );
           return(ff_out);
         }
+
         Mat gaus_ker(int size)
         {
           double sigma = (size/SIGMA_CLIP + 0.5f);
@@ -121,7 +123,7 @@ Image Image::clone()
     Image ret = Image(*this);
     ret.mat = mat.clone();
     ret.window_name = window_name + "_copy" + to_string(rand() % 1000);
-    namedWindow(ret.window_name, WINDOW_AUTOSIZE);
+    //namedWindow(ret.window_name, WINDOW_AUTOSIZE);
     return ret;
 }
 
@@ -152,6 +154,19 @@ void Image::setmat(Mat newmat)
 Size Image::getsize() const
 {
     return mat.size();
+}
+
+void Image::apply_noise(Image& noiseim)
+{
+  Mat noisem = noiseim.getmat();
+  cout << "width : " << width << "\nheight : " << height << endl;
+   for (int i = 0; i < width;i++)
+   {
+     for (int j = 0; j < height;j++)
+     {
+        mat.at<uchar>(j,i) = min(255, mat.at<uchar>(j,i) + 2*abs(125 - noisem.at<uchar>(j,i)));
+     }
+   }
 }
 
 void Image::convolve(Mat_<double> filter, bool half)
@@ -194,14 +209,24 @@ void Image::binarization(int threshold){
     }
     int x = this -> width;
     int y = this -> height;
-    for(unsigned int i=0; i < x; i++){
+    for(unsigned int i = 0; i < x; i++){
         for(unsigned int j = 0; j < y; j++){
-            if(mat.at<uchar>(i,j) <= threshold){
-                mat.at<uchar>(i,j) = 0;
+            if(mat.at<uchar>(j,i) <= threshold){
+                mat.at<uchar>(j,i) = 0;
             }
             else{
-                mat.at<uchar>(i,j) = 1;
+                mat.at<uchar>(j,i) = 1;
             }
+        }
+    }
+}
+
+void Image::grayscale(){
+    int x = this -> width;
+    int y = this -> height;
+    for(unsigned int i = 0; i < x; i++){
+        for(unsigned int j = 0; j < y; j++){
+            mat.at<uchar>(j,i) *= 255;
         }
     }
 }
@@ -213,8 +238,28 @@ Kernel::Kernel(int dim, int x, int y, std::string type){
         y_ori = 0;
     }
     this -> dim = dim;
+    this -> x_ori = x;
+    this -> y_ori = y;
     if(std::string("Square").compare(type) == 0){
-        mask = Mat::ones(dim, dim, CV_32F);
+        mask = Mat::ones(dim, dim, CV_8U);
+    }
+    else if(std::string("Plus").compare(type) == 0){
+        if (dim%2 != 1){
+            cout << "Wrong dimension for this kind of kernel - Enter an odd one" << endl;
+            cout << "Default set to square" << endl;
+            mask = Mat::ones(dim, dim, CV_8U);
+        } else {
+            mask = Mat::zeros(dim, dim, CV_8U);
+            int center = dim/2;
+            for(unsigned int i = 0; i < dim; i++){
+                mask.at<uchar>(center, i) = 1;
+                mask.at<uchar>(i, center) = 1;
+            }
+        }
+    }
+    else {
+        cout << "Unknown type for kernel - Default set to square" << endl;
+        mask = Mat::ones(dim, dim, CV_8U);
     }
 }
 
@@ -233,26 +278,11 @@ Point Kernel::getorig() const {
 int Kernel::erode(Mat image){
     if(mask.size() != image.size()){
         cout << "Wrong dimension in the matrix";
-        return 0;
+        return image.at<uchar>(y_ori, x_ori);
     }
     for(unsigned int i = 0; i < dim; i++){
         for(unsigned int j = 0; j < dim; j++){
-            if(mask.at<uchar>(i,j) == 1 && mask.at<uchar>(i,j) != 1){
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
-int Kernel::dilate(Mat image){
-    if(mask.size() != image.size()){
-        cout << "Wrong dimension in the matrix";
-        return 0;
-    }
-    for(unsigned int i = 0; i < dim; i++){
-        for(unsigned int j = 0; j < dim; j++){
-            if(mask.at<uchar>(i,j) == 1 && image.at<uchar>(i,j) == 1){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) != 0){
                 return 1;
             }
         }
@@ -260,30 +290,49 @@ int Kernel::dilate(Mat image){
     return 0;
 }
 
-Image erosion(Image image, Kernel kernel, int threshold){
-    Image output = image.clone();
-    output.binarization(threshold);
-    Size s = image.getsize();
-    Point orig = kernel.getorig();
-    for (unsigned int i = 0; i < s.width; i++){
-        for (unsigned int j = 0; j < s.height; j++){
-            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
-            (output.getmat()).at<uchar>(i,j) = 255*kernel.erode(extract);
-      }
-  }
-  return output;
+int Kernel::dilate(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) == 0){
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
-Image dilatation(Image image, Kernel kernel, int threshold){
-    Image output = image.clone();
-    output.binarization(threshold);
-    Size s = image.getsize();
-    Point orig = kernel.getorig();
-    for (unsigned int i = 0; i < s.width; i++){
-        for (unsigned int j = 0; j < s.height; j++){
-            Mat extract(image.getmat(), Rect(i - orig.x, j - orig.y, kernel.getdim(), kernel.getdim()));
-            (output.getmat()).at<uchar>(i,j) = kernel.dilate(extract);
-      }
-  }
-  return output;
+int Kernel::dilate_gray(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    int min = 255;
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) < min){
+                min = image.at<uchar>(j,i);
+            }
+        }
+    }
+    return min;
+}
+
+int Kernel::erode_gray(Mat image){
+    if(mask.size() != image.size()){
+        cout << "Wrong dimension in the matrix";
+        return image.at<uchar>(y_ori, x_ori);
+    }
+    int max = 0;
+    for(unsigned int i = 0; i < dim; i++){
+        for(unsigned int j = 0; j < dim; j++){
+            if(mask.at<uchar>(j,i) == 1 && image.at<uchar>(j,i) > max){
+                max = image.at<uchar>(j,i);
+            }
+        }
+    }
+    return max;
 }

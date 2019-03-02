@@ -134,7 +134,7 @@ namespace transformations {
                 return (Mat)omat;
         }
 
-        void negative(Image& image, string filename)
+        void negative(Image& image)
         {
           Mat imagemat = image.getmat();
           Size taille = image.getsize();
@@ -147,7 +147,7 @@ namespace transformations {
           image.setmat(modified_img);
         }
 
-        void symmetryy(Image& image, string filename)
+        void symmetryy(Image& image)
         {
           Mat imagemat = image.getmat();
           Size taille = image.getsize();
@@ -161,7 +161,7 @@ namespace transformations {
 
         }
 
-        void symmetryx(Image& image, string filename)
+        void symmetryx(Image& image)
         {
           Mat imagemat = image.getmat();
           Size taille = image.getsize();
@@ -174,26 +174,20 @@ namespace transformations {
           image.setmat(modified_img);
         }
 
-        double lowerfunc(Point point1, Point point2, double K)
+        double lowerfunc(Point point1, Point point2, double K, int s)
         {
-          //double result = 1/(1+exp(K*(distance(point1, point2)- 120)));
-          double result = 1/(1+exp((K+K*abs(utils::costheta(point1, point2)))*(utils::distance(point1, point2) - 120 + 30*abs(utils::costheta(point1, point2)))));
+          double result = 1/(1+exp((K+K*abs(utils::costheta(point1, point2)))*(utils::distance(point1, point2) - s  + (s/4)*abs(utils::costheta(point1, point2)))));
           return result;
         }
 
-
-        void weaken_pressure(Image image, Point center, int width, int height, double K)
+        void weaken_pressure(Image image, Point center, int width, int height, double K, int s)
         {
           Mat immat = image.getmat();
-          //for (int x = center.x - width/2; x < center.x + width/2 + 1; x++)
           for (int x = 0; x < image.getsize().width; x++)
           {
-            //for (int y = center.y - height/2; y < center.y + height/2 + 1; y++)
             for (int y = 0; y < image.getsize().height; y++)
             {
-              //immat.at<uchar>(Point(x,y)) = immat.at<uchar>(Point(x,y))*lowerfunc(center, Point(x,y), K);
-              immat.at<uchar>(Point(x,y)) = 255 - double(255 - immat.at<uchar>(Point(x,y)))*lowerfunc(center, Point(x,y), K);
-              //immat.at<uchar>(Point(x,y)) = costheta(center, Point(x,y))*255;
+              immat.at<uchar>(Point(x,y)) = 255 - double(255 - immat.at<uchar>(Point(x,y)))*lowerfunc(center, Point(x,y), K, s);
             }
           }
           image.setmat(immat);
@@ -208,12 +202,84 @@ namespace transformations {
           idft(temp1, temp2, DFT_REAL_OUTPUT);
           temp2.convertTo(temp1, CV_8U);
           utils::shift(temp1);
-          utils::waitKey(0);
           image.setmat(temp1);
         }
+
         void blur_gc(Image &image, int ksize)
         {
           image.convolve(utils::gaus_ker((ksize-1)/2));
+        }
+
+        Image erosion(Image& image, Kernel kernel, int threshold){
+            Image output = image.clone();
+            output.binarization(threshold);
+            image.binarization(threshold);
+            Mat output_mat = output.getmat();
+            Size s = image.getsize();
+            int dim = kernel.getdim();
+            Point orig = kernel.getorig();
+            for(unsigned int i = orig.x; i <= s.width - dim + orig.x; i++){
+                for(unsigned int j = orig.y; j <= s.height- dim + orig.y; j++){
+                    Mat extract(image.getmat(), Rect(i - orig.x, j-orig.y, dim, dim));
+                    output_mat.at<uchar>(j,i) = kernel.erode(extract);
+                }
+            }
+            output.setmat(output_mat);
+            image.grayscale();
+            output.grayscale();
+            return output;
+        }
+
+        Image dilatation(Image& image, Kernel kernel, int threshold){
+            Image output = image.clone();
+            output.binarization(threshold);
+            image.binarization(threshold);
+            Mat output_mat = output.getmat();
+            Size s = image.getsize();
+            int dim = kernel.getdim();
+            Point orig = kernel.getorig();
+            for(unsigned int i = orig.x; i <= s.width - dim + orig.x; i++){
+                for(unsigned int j = orig.y; j <= s.height- dim + orig.y; j++){
+                    Mat extract(image.getmat(), Rect(i - orig.x, j-orig.y, dim, dim));
+                    output_mat.at<uchar>(j,i) = kernel.dilate(extract);
+                }
+            }
+            output.setmat(output_mat);
+            image.grayscale();
+            output.grayscale();
+            return output;
+        }
+
+        Image gray_erosion(Image& image, Kernel kernel){
+            Image output = image.clone();
+            Mat output_mat = output.getmat();
+            Size s = image.getsize();
+            int dim = kernel.getdim();
+            Point orig = kernel.getorig();
+            for(unsigned int i = orig.x; i < s.width - dim + orig.x; i++){
+                for(unsigned int j = orig.y; j < s.height - dim + orig.y; j++){
+                    Mat extract(image.getmat(), Rect(i - orig.x, j-orig.y, dim, dim));
+                    output_mat.at<uchar>(j,i) = kernel.erode_gray(extract);
+                }
+            }
+            image.setmat(output_mat);
+            return output;
+        }
+
+        Image gray_dilatation(Image& image, Kernel kernel){
+            Image output = image.clone();
+            Mat output_mat = output.getmat();
+            Size s = image.getsize();
+            int dim = kernel.getdim();
+            Point orig = kernel.getorig();
+            for(unsigned int i = orig.x; i < s.width - dim + orig.x; i++){
+                for(unsigned int j = orig.y; j < s.height - dim + orig.y; j++){
+                    Mat extract(image.getmat(), Rect(i - orig.x, j-orig.y, dim, dim));
+                    output_mat.at<uchar>(j,i) = kernel.dilate_gray(extract);
+                }
+            }
+            output.setmat(output_mat);
+            return output;
         }
 
 
